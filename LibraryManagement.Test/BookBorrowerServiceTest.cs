@@ -11,7 +11,71 @@ namespace LibraryManagement.Test
 {
     public class BookBorrowerServiceTest
     {
-       
+        [Fact]
+        public void BorrowBook_BorrowerIdDoesNotExist_ThrowKeyNotFoundException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
+            int borrowerId = 20;
+            int bookId = 1;
+            int quantity = 1;
+            int limit = 2;
+            
+            Assert.Throws<KeyNotFoundException>(() => bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, limit));
+        }
 
+        [Fact]
+        public void BorrowBook_BorrowerHasBorrowedUpToLimit_ThrowInvalidOperationException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
+            int borrowerId = 1;
+            int bookId = 1;
+            int quantity = 1;
+            int limit = 2;
+            bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, limit);
+            bookId = 2;
+            bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, limit);
+            bookId = 3;
+            Assert.Throws<InvalidOperationException>(() => bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, limit));
+        }
+
+        [Fact]
+        public void BorrowBook_BookHasAlreadyBeenBorrowedBySamePerson_ThrowInvalidOperationException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
+            int borrowerId = 1;
+            int bookId = 1;
+            int quantity = 1;
+            int limit = 2;
+            bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, 1);
+
+            Assert.Throws<InvalidOperationException>(() => bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, limit));
+        }
+
+        [Fact]
+        public void BorrowBook_BookBorrowedOnceByDifferentPersons_QuntityReducesByTwo()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
+            int bookId = 1;
+            var stores = bookManagementService.GetBookStores();
+            var store = stores.FirstOrDefault(b => b.BookId == bookId);
+            var initialCount = store.Quantity;
+            int borrowerId= 1;            
+            int quantity = 1;
+            int limit = 2;
+            bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, limit);
+            borrowerId = 2;
+            bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, limit);
+
+            stores = bookManagementService.GetBookStores();
+            store = stores.FirstOrDefault(b => b.BookId == bookId);
+            var finalCount = store.Quantity;
+            Assert.Equal(initialCount - 2, finalCount);
+        }
+
+      
     }
 }
