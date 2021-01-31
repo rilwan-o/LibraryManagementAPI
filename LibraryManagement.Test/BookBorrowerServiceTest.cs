@@ -106,9 +106,26 @@ namespace LibraryManagement.Test
             var finalCount = store.Quantity;
 
             Assert.Equal(initialCount, finalCount);
+        }
+        [Fact]
+        public void CreateBorrower_NewBorrowerDifferentUsername_ReturnsTrue()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
 
-
+            var response = bookBorrowerService.CreateBorrower("Jide", "Balogun", "Jido");
+            Assert.True(response);
         }
 
+        [Fact]
+        public void CreateBorrower_BorrowerExistwithSameUsername_ThrowsException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
+
+            var response = bookBorrowerService.CreateBorrower("Jide", "Balogun", "Jido");
+            Assert.Throws<InvalidOperationException>(() => bookBorrowerService.CreateBorrower("Wale", "Jerry", "Jido"));
+           
+        }
     }
 }

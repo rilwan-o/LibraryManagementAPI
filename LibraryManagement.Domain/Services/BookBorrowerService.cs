@@ -75,5 +75,16 @@ namespace LibraryManagement.Domain.Services
             }
             return resp;
         }
+
+        public bool CreateBorrower(string firstName, string lastName, string username)
+        {
+            var existingBorrower = borrowers.FirstOrDefault(b => b.UserName == username);
+            if(existingBorrower != null) throw new InvalidOperationException("A borrower with same username already exists");
+            var borrower = new Borrower { FirstName = firstName, LastName = lastName, UserName = username, DateCreated = DateTime.Now, DateDeleted = null };
+            borrower.Id = borrowers.Count + 1;
+            borrowers.Add(borrower);
+            return true;
+
+        }
     }
 }

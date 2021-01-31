@@ -1,3 +1,6 @@
+using LibraryManagement.Domain.Interfaces.BookBorrower;
+using LibraryManagement.Domain.Interfaces.BookManager;
+using LibraryManagement.Domain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +30,10 @@ namespace LibraryManagement.API
         {
 
             services.AddControllers();
+
+            services.AddSingleton<IBookManagementService, BookManagementService>();
+            services.AddSingleton<IBookBorrowerService, BookBorrowerService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LibraryManagement.API", Version = "v1" });
@@ -39,13 +46,13 @@ namespace LibraryManagement.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryManagement.API v1"));
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryManagement.API v1"));
 
             app.UseRouting();
 
-            app.UseAuthorization();
+           // app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
