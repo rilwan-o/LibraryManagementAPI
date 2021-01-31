@@ -111,5 +111,53 @@ namespace LibraryManagement.API.Controllers
                 return StatusCode(500, new Response() { Code = "99", Description = "System error", Data = "" });
             }
         }
+
+        [HttpPost]
+        [Route("CreateBorrower")]
+        public IActionResult CreateBorrower([FromBody] BorrowerDto borrowerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                try
+                {
+                    var response = _bookBorrowerService.CreateBorrower(borrowerDto.FirstName, borrowerDto.LastName, borrowerDto.UserName);
+                    return Ok(new Response() { Code = "00", Description = "Success", Data = new { BorrowerId = response } });                   
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    return StatusCode(422, new Response() { Code = "01", Description = ex.Message, Data = false });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response() { Code = "99", Description = "System error", Data = "" });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetBorrower/{id}")]
+        public IActionResult GetBorrower(int id)
+        {
+            if(id.GetType() != typeof(int))
+            {
+                return BadRequest("integer value for id expected");
+            }
+
+            try
+            {
+                var response = _bookBorrowerService.GetBorrower(id);
+                if (response == null) return NotFound();
+                return Ok(new Response() { Code = "00", Description = "Success", Data = response });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response() { Code = "99", Description = "System error", Data = "" });
+            }
+        }
     }
 }
