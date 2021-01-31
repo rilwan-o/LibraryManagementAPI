@@ -113,9 +113,9 @@ namespace LibraryManagement.Test
             IBookManagementService bookManagementService = new BookManagementService();
             IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
 
-            var response = bookBorrowerService.CreateBorrower("Jide", "Balogun", "Jido");
+            var response = bookBorrowerService.CreateBorrower("Jide", "Balogun", "Jido", "dfghjk");
             var borrower = bookBorrowerService.GetBorrower(response);
-            Assert.True(borrower.FirstName== "Jide" && borrower.LastName=="Balogun" && borrower.UserName=="Jido");
+            Assert.True(borrower.FirstName== "Jide" && borrower.LastName=="Balogun" && borrower.Email=="Jido");
 
 
 
@@ -127,8 +127,8 @@ namespace LibraryManagement.Test
             IBookManagementService bookManagementService = new BookManagementService();
             IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
 
-            bookBorrowerService.CreateBorrower("Jide", "Balogun", "Jido");
-            Assert.Throws<InvalidOperationException>(() => bookBorrowerService.CreateBorrower("Wale", "Jerry", "Jido"));
+            bookBorrowerService.CreateBorrower("Jide", "Balogun", "Jido", "cgvghjk");
+            Assert.Throws<InvalidOperationException>(() => bookBorrowerService.CreateBorrower("Wale", "Jerry", "Jido", "iouytr"));
            
         }
     }

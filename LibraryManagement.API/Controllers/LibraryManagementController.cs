@@ -125,7 +125,7 @@ namespace LibraryManagement.API.Controllers
             {
                 try
                 {
-                    var response = _bookBorrowerService.CreateBorrower(borrowerDto.FirstName, borrowerDto.LastName, borrowerDto.UserName);
+                    var response = _bookBorrowerService.CreateBorrower(borrowerDto.FirstName, borrowerDto.LastName, borrowerDto.Email, borrowerDto.Password);
                     return Ok(new Response() { Code = "00", Description = "Success", Data = new { BorrowerId = response } });                   
                 }
                 catch (KeyNotFoundException ex)
@@ -140,8 +140,8 @@ namespace LibraryManagement.API.Controllers
         }
 
         [HttpGet]
-        [Route("GetBorrower/{id}")]
-        public IActionResult GetBorrower(int id)
+        [Route("GetBorrowerById/{id}")]
+        public IActionResult GetBorrowerById(int id)
         {
             if(id.GetType() != typeof(int))
             {
@@ -153,6 +153,27 @@ namespace LibraryManagement.API.Controllers
                 var response = _bookBorrowerService.GetBorrower(id);
                 if (response == null) return NotFound();
                 return Ok(new Response() { Code = "00", Description = "Success", Data = response });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response() { Code = "99", Description = "System error", Data = "" });
+            }
+        }
+
+        [HttpPost]
+        [Route("BorrowerLogIn")]
+        public IActionResult BorrowerLogIn([FromBody] LoginDto loginDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var response = _bookBorrowerService.Login(loginDto.Email, loginDto.Password);
+                if (response == 0) return NotFound();
+                return Ok(new Response() { Code = "00", Description = "Success", Data = new { BorrowerId = response } });
             }
             catch (Exception ex)
             {

@@ -19,10 +19,10 @@ namespace LibraryManagement.Domain.Services
             _bookManagementService = bookManagementService;
 
             borrowers = new List<Borrower>() {
-                new Borrower{Id=1, UserName="lampard", FirstName="Lambert", LastName="Paul", DateCreated=new DateTime(2015, 12, 25) },
-                new Borrower{Id=2, UserName="Jerry", FirstName="Joe", LastName="Ibrahim", DateCreated=new DateTime(2017, 12, 25) },
-                new Borrower{Id=3, UserName="Willy", FirstName="Zambi", LastName="Wiza", DateCreated=new DateTime(2018, 12, 25) },
-                new Borrower{Id=4, UserName="Hamed", FirstName="Dennis", LastName="Michael", DateCreated=new DateTime(2019, 12, 25) },
+                new Borrower{Id=1, Email="lampard", FirstName="Lambert", LastName="Paul", Password="",  DateCreated=new DateTime(2015, 12, 25) },
+                new Borrower{Id=2, Email="Jerry", FirstName="Joe", LastName="Ibrahim", Password="",  DateCreated=new DateTime(2017, 12, 25) },
+                new Borrower{Id=3, Email="Willy", FirstName="Zambi", LastName="Wiza", Password="", DateCreated=new DateTime(2018, 12, 25) },
+                new Borrower{Id=4, Email="Hamed", FirstName="Dennis", LastName="Michael", Password="", DateCreated=new DateTime(2019, 12, 25) },
 
             };
 
@@ -76,15 +76,22 @@ namespace LibraryManagement.Domain.Services
             return resp;
         }
 
-        public int CreateBorrower(string firstName, string lastName, string username)
+        public int CreateBorrower(string firstName, string lastName, string email, string password)
         {
-            var existingBorrower = borrowers.FirstOrDefault(b => b.UserName == username);
-            if(existingBorrower != null) throw new InvalidOperationException("A borrower with same username already exists");
-            var borrower = new Borrower { FirstName = firstName, LastName = lastName, UserName = username, DateCreated = DateTime.Now, DateDeleted = null };
+            var existingBorrower = borrowers.FirstOrDefault(b => b.Email == email);
+            if(existingBorrower != null) throw new InvalidOperationException("A borrower with same Email already exists");
+            var borrower = new Borrower { FirstName = firstName, LastName = lastName, Email = email, Password = password, DateCreated = DateTime.Now, DateDeleted = null };
             borrower.Id = borrowers.Count + 1;
             borrowers.Add(borrower);
             return borrower.Id;
 
+        }
+
+        public int Login(string email, string password)
+        {
+            var existingBorrower = borrowers.FirstOrDefault(b => b.Email == email && b.Password ==password);
+            if (existingBorrower != null) return existingBorrower.Id;
+            return 0;
         }
     }
 }

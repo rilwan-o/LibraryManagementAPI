@@ -12,7 +12,9 @@ namespace LibraryManagement.Domain.Interfaces.BookBorrower
         bool ReturnBook(int bookId, int borrowerId, int quantity);
         Borrower GetBorrower(int id);
 
-        int CreateBorrower(string firstName, string lastName, string username);
+        int CreateBorrower(string firstName, string lastName, string Email, string password);
+
+        int Login(string email, string password);
 
 
     }
