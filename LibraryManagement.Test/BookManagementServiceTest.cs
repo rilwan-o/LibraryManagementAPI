@@ -91,6 +91,73 @@ namespace LibraryManagement.Test
             Assert.Equal(initialCount + 1, finalCount);
         }
 
-      
+        [Fact]
+        public void RemoveBookFromStore_BookIdExistInBookNotExistInBookStore_ThrowsKeyNotFoundException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            Assert.Throws<KeyNotFoundException>(() => bookManagementService.RemoveBookFromStore(4, 1));
+        }
+
+        [Fact]
+        public void RemoveBookFromStore_BookIdExistInBookExistInBookStore_ReturnsTrueQuantityReduces()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            var stores = bookManagementService.GetBookStores();
+            var store = stores.FirstOrDefault(b => b.BookId == 1);
+            var initialCount = store.Quantity;
+            var response = bookManagementService.RemoveBookFromStore(1, 1);
+            stores = bookManagementService.GetBookStores();
+            store = stores.FirstOrDefault(b => b.BookId == 1);
+            var finalCount = store.Quantity;
+            Assert.True(response);
+            Assert.Equal(initialCount - 1, finalCount);
+        }
+
+        [Fact]
+        public void RemoveBookFromStore_BookIdExistButQuantityIsLessThanOne_ThrowOutofrangeException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            var stores = bookManagementService.GetBookStores();
+            var store = stores.FirstOrDefault(b => b.BookId == 1);
+            var response = bookManagementService.RemoveBookFromStore(1, 1);
+            response = bookManagementService.RemoveBookFromStore(1, 1);
+            response = bookManagementService.RemoveBookFromStore(1, 1);
+            Assert.Throws<ArgumentOutOfRangeException>(() => bookManagementService.RemoveBookFromStore(1, 1));
+        }
+
+        [Fact]
+        public void RemoveBookFromStore_BookIdExistButRemainingQuantityIsLessThanWantedQuantity_ThrowOutofrangeException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            var stores = bookManagementService.GetBookStores();
+            var store = stores.FirstOrDefault(b => b.BookId == 1);
+            var neededQuantity = 20;
+            Assert.Throws<ArgumentOutOfRangeException>(() => bookManagementService.RemoveBookFromStore(1, neededQuantity));
+        }
+
+        [Fact]
+        public void CreateBook_BookAlreadyExist_ThrowException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            var book = new Book { Id = 2, Name = "English Language", AuthorId = 2, PublisherId = 2, PublishDate = new DateTime(2015, 12, 25) };
+            Assert.Throws<Exception>(() => bookManagementService.CreateBook(book));
+        }
+
+        [Fact]
+        public void CreateBook_BookIsNew_ThrowException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            var book = new Book { Id=0, Name = "How To Influence and Win People", AuthorId = 2, PublisherId = 2, PublishDate = new DateTime(2020, 12, 25) };
+            bookManagementService.CreateBook(book);
+            bookManagementService.AddBookToStore(5, 1);
+            var stores = bookManagementService.GetBookStores();
+            var store = stores.FirstOrDefault(b => b.BookId == 5);
+            var initialCount = 0;
+            stores = bookManagementService.GetBookStores();
+            store = stores.FirstOrDefault(b => b.BookId == 5);
+            var finalCount = store.Quantity;
+            Assert.Equal(initialCount + 1, finalCount);
+        }
+
     }
 }

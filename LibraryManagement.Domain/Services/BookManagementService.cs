@@ -113,7 +113,16 @@ namespace LibraryManagement.Domain.Services
             return bookstores;
         }
 
-      
+        public bool RemoveBookFromStore(int bookId, int quantity)
+        {
+            CheckBookIdExistInBook(bookId);
+            var bkItem = bookstores.FirstOrDefault(b => b.BookId == bookId);
+            if (bkItem == null) throw new KeyNotFoundException("Book not found");
+            if (bkItem.Quantity <= 0 || bkItem.Quantity < quantity) throw new ArgumentOutOfRangeException("Empty booklist");
+            bkItem.Quantity = bkItem.Quantity - quantity;
+            return true;
+
+        }
 
         public int CreateBook(Book book)
         {
@@ -131,9 +140,5 @@ namespace LibraryManagement.Domain.Services
             return bk;
         }
 
-        public bool RemoveBookFromStore(int bookId, int quantity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
