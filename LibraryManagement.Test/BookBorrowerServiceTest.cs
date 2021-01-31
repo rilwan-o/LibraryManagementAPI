@@ -76,6 +76,39 @@ namespace LibraryManagement.Test
             Assert.Equal(initialCount - 2, finalCount);
         }
 
-      
+        [Fact]
+        public void ReturnBook_BookWasNotInitiallyBorrowed_ThrowException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
+            int borrowerId = 1;
+            int bookId = 1;
+            int quantity = 1;
+
+            Assert.Throws<KeyNotFoundException>(() => bookBorrowerService.ReturnBook(bookId, borrowerId, quantity));
+        }
+
+        [Fact]
+        public void ReturnBook_BookWasInitiallyBorrowed_ReturnsTrue()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            IBookBorrowerService bookBorrowerService = new BookBorrowerService(bookManagementService);
+            int bookId = 1;
+            var stores = bookManagementService.GetBookStores();
+            var store = stores.FirstOrDefault(b => b.BookId == bookId);
+            var initialCount = store.Quantity;
+            int borrowerId = 1;
+            int quantity = 1;
+            bookBorrowerService.BorrowBook(bookId, borrowerId, quantity, 1);
+            bookBorrowerService.ReturnBook(bookId, borrowerId, quantity);
+            stores = bookManagementService.GetBookStores();
+            store = stores.FirstOrDefault(b => b.BookId == bookId);
+            var finalCount = store.Quantity;
+
+            Assert.Equal(initialCount, finalCount);
+
+
+        }
+
     }
 }

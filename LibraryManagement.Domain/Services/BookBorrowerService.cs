@@ -59,9 +59,21 @@ namespace LibraryManagement.Domain.Services
             if (borrower == null) throw new KeyNotFoundException("Borrower Id not found");
         }
 
-        bool IBookBorrowerService.ReturnBook(int bookId, int borrowerId, int quantity)
+        public bool ReturnBook(int bookId, int borrowerId, int quantity)
         {
-            throw new NotImplementedException();
+            CheckBorrowerIdExist(borrowerId);
+            var status = 1;
+
+            var borrowedbook = borrowedBooks.FirstOrDefault(b => b.BookId == bookId && b.BorrowerId == borrowerId && b.Status == status);
+            if (borrowedbook == null) throw new KeyNotFoundException("Transaction not found");
+
+            var resp = _bookManagementService.AddBookToStore(bookId, quantity);
+            if (resp)
+            {
+                borrowedbook.Status = 0;
+                borrowedbook.DateReturned = DateTime.Now;
+            }
+            return resp;
         }
     }
 }
