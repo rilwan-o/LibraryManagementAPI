@@ -58,7 +58,39 @@ namespace LibraryManagement.Test
 
         }
 
-       
+        [Fact]
+        public void AddBookToStore_BookRecordExistButNotInStore_CreatesANewBookRecord()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            var initialCount = bookManagementService.GetBookStores().Count;
+            var response = bookManagementService.AddBookToStore(4, 1);
+            var finalCount = bookManagementService.GetBookStores().Count;
+            Assert.True(response);
+            Assert.Equal(initialCount + 1, finalCount);
+        }
 
+        [Fact]
+        public void AddBookToStore_BookRecordDoesNotExistNotInStore_ThrowsKeyNotFoundException()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            Assert.Throws<KeyNotFoundException>(() => bookManagementService.AddBookToStore(14, 1));
+        }
+
+        [Fact]
+        public void AddBookToStore_BookRecordExistInStore_ReturnsTrueIncreaseBookQuantityCount()
+        {
+            IBookManagementService bookManagementService = new BookManagementService();
+            var stores = bookManagementService.GetBookStores();            
+            var store = stores.FirstOrDefault(b => b.BookId == 1);
+            var initialCount = store.Quantity;
+            var response = bookManagementService.AddBookToStore(1, 1);
+            stores = bookManagementService.GetBookStores();
+            store = stores.FirstOrDefault(b => b.BookId == 1);
+            var finalCount = store.Quantity;
+            Assert.True(response);
+            Assert.Equal(initialCount + 1, finalCount);
+        }
+
+      
     }
 }

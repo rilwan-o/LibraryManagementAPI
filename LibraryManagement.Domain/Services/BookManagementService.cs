@@ -81,27 +81,57 @@ namespace LibraryManagement.Domain.Services
             return publishers.FirstOrDefault(p => p.Id == publisherId);
         }
 
-        int IBookManagementService.CreateBook(Book book)
+
+        public bool AddBookToStore(int bookId, int quantity)
         {
-            throw new NotImplementedException();
+            var bkItem = bookstores.FirstOrDefault(b => b.BookId == bookId);
+            if(bkItem == null)
+            {
+                CheckBookIdExistInBook(bookId);
+
+                bkItem = new BookStore { BookId = bookId };
+                bkItem.Id = bookstores.Count + 1;
+                bkItem.Quantity = quantity;
+                bookstores.Add(bkItem);
+                return true;
+            }
+            else
+            {
+                bkItem.Quantity = bkItem.Quantity + quantity;
+                return true;
+            }
         }
 
-        bool IBookManagementService.AddBookToStore(int bookId, int quantity)
+        private void CheckBookIdExistInBook(int bookId)
         {
-            throw new NotImplementedException();
+            var book = books.FirstOrDefault(b => b.Id == bookId);
+            if (book == null) throw new KeyNotFoundException("Book Id not found");
         }
 
-        bool IBookManagementService.RemoveBookFromStore(int bookId, int quantity)
+        public List<BookStore> GetBookStores()
         {
-            throw new NotImplementedException();
+            return bookstores;
         }
 
-        Book IBookManagementService.GetBook(int id)
+      
+
+        public int CreateBook(Book book)
         {
-            throw new NotImplementedException();
+            var bk = books.FirstOrDefault(b => b.Name == book.Name && b.AuthorId == book.Id && b.PublishDate == book.PublishDate && b.PublisherId == book.PublisherId);
+            if (bk != null) throw new Exception("Book already exists.");
+
+            book.Id = books.Count + 1;
+            books.Add(book);
+            return book.Id;
         }
 
-        List<BookStore> IBookManagementService.GetBookStores()
+        public Book GetBook(int id)
+        {
+            var bk = books.FirstOrDefault(b => b.Id == id);
+            return bk;
+        }
+
+        public bool RemoveBookFromStore(int bookId, int quantity)
         {
             throw new NotImplementedException();
         }
