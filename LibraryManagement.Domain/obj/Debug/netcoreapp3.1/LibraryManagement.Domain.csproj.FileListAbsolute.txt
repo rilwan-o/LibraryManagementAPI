@@ -1,0 +1,9 @@
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\bin\Debug\netcoreapp3.1\LibraryManagement.Domain.deps.json
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\bin\Debug\netcoreapp3.1\LibraryManagement.Domain.dll
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\bin\Debug\netcoreapp3.1\LibraryManagement.Domain.pdb
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\obj\Debug\netcoreapp3.1\LibraryManagement.Domain.csprojAssemblyReference.cache
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\obj\Debug\netcoreapp3.1\LibraryManagement.Domain.AssemblyInfoInputs.cache
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\obj\Debug\netcoreapp3.1\LibraryManagement.Domain.AssemblyInfo.cs
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\obj\Debug\netcoreapp3.1\LibraryManagement.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\obj\Debug\netcoreapp3.1\LibraryManagement.Domain.dll
+C:\Users\Rilwan.Oshinkoya\source\repos\LibraryManagement\LibraryManagement.Domain\obj\Debug\netcoreapp3.1\LibraryManagement.Domain.pdb
