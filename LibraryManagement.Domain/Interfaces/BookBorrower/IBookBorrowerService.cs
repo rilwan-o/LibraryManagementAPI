@@ -15,6 +15,7 @@ namespace LibraryManagement.Domain.Interfaces.BookBorrower
         int CreateBorrower(string firstName, string lastName, string Email, string password);
 
         int Login(string email, string password);
+        List<BorrowedBook> GetBooksBorrowedByBorrower(int borrowerId);
 
 
     }

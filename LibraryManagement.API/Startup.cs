@@ -35,7 +35,9 @@ namespace LibraryManagement.API
             services.AddSingleton<IBookBorrowerService, BookBorrowerService>();
             services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod());
             });
             services.AddSwaggerGen(c =>
             {
@@ -54,7 +56,10 @@ namespace LibraryManagement.API
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryManagement.API v1"));
 
             app.UseRouting();
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors(x => x
+           .AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader());
             // app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

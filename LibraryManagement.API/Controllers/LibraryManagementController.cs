@@ -160,6 +160,36 @@ namespace LibraryManagement.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetBorrowedBooks/{id}")]
+        public IActionResult GetBorrowedBooks(int id)
+        {
+            if (id.GetType() != typeof(int))
+            {
+                return BadRequest("integer value for id expected");
+            }
+
+            List<BookDto> books = new List<BookDto>();
+            try
+            {
+                var borrorwedBooks = _bookBorrowerService.GetBooksBorrowedByBorrower(id);
+                foreach (var bs in borrorwedBooks)
+                {
+                    var book = _bookManagementService.GetBook(bs.BookId);
+                    var author = _bookManagementService.GetAuthor(book.AuthorId);
+                    var publisher = _bookManagementService.GetPublisher(book.PublisherId);
+                    BookDto bookDto = new BookDto { Id = book.Id, Name = book.Name, Quantity = 1, Author = $"{author.FirstName} {author.LastName}", Publisher = publisher.Name, PublishedDate = book.PublishDate };
+                    books.Add(bookDto);
+                }
+
+                return Ok(new Response() { Code = "00", Description = "Success", Data = books });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new Response() { Code = "99", Description = "System error", Data = "" });
+            }
+        }
+
         [HttpPost]
         [Route("BorrowerLogIn")]
         public IActionResult BorrowerLogIn([FromBody] LoginDto loginDto)

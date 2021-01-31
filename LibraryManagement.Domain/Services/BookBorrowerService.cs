@@ -19,10 +19,10 @@ namespace LibraryManagement.Domain.Services
             _bookManagementService = bookManagementService;
 
             borrowers = new List<Borrower>() {
-                new Borrower{Id=1, Email="lampard", FirstName="Lambert", LastName="Paul", Password="",  DateCreated=new DateTime(2015, 12, 25) },
-                new Borrower{Id=2, Email="Jerry", FirstName="Joe", LastName="Ibrahim", Password="",  DateCreated=new DateTime(2017, 12, 25) },
-                new Borrower{Id=3, Email="Willy", FirstName="Zambi", LastName="Wiza", Password="", DateCreated=new DateTime(2018, 12, 25) },
-                new Borrower{Id=4, Email="Hamed", FirstName="Dennis", LastName="Michael", Password="", DateCreated=new DateTime(2019, 12, 25) },
+                new Borrower{Id=1, Email="lampard", FirstName="Lambert", LastName="Paul", Password="pass",  DateCreated=new DateTime(2015, 12, 25) },
+                new Borrower{Id=2, Email="Jerry", FirstName="Joe", LastName="Ibrahim", Password="pass",  DateCreated=new DateTime(2017, 12, 25) },
+                new Borrower{Id=3, Email="Willy", FirstName="Zambi", LastName="Wiza", Password="pass", DateCreated=new DateTime(2018, 12, 25) },
+                new Borrower{Id=4, Email="Hamed", FirstName="Dennis", LastName="Michael", Password="pass", DateCreated=new DateTime(2019, 12, 25) },
 
             };
 
@@ -89,9 +89,16 @@ namespace LibraryManagement.Domain.Services
 
         public int Login(string email, string password)
         {
-            var existingBorrower = borrowers.FirstOrDefault(b => b.Email == email && b.Password ==password);
+            var existingBorrower = borrowers.FirstOrDefault(b => b.Email.ToLower() == email.ToLower() && b.Password == password);
             if (existingBorrower != null) return existingBorrower.Id;
             return 0;
+        }
+
+        public List<BorrowedBook> GetBooksBorrowedByBorrower(int borrowerId)
+        {
+            CheckBorrowerIdExist(borrowerId);
+            return borrowedBooks.Where(b => b.BorrowerId == borrowerId && b.Status == 1).ToList();
+
         }
     }
 }
